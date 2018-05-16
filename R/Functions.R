@@ -21,7 +21,6 @@ MORcalc <- function(my.var, digits = 2)
   Median.OR <- round(exp(sqrt(2*my.var)*qnorm(.75)), digits)
   return(Median.OR)}
 
-save(MORcalc, file = "C://Users/Gebruiker/Dropbox/R package/bgravesteijn/man/MORcalc.Rd")
 
 catterpillar<-function(x = NULL, fitter= NULL,grp.var=NULL, grp.var.t = NULL, MOR=TRUE){
   #x = list of fitted models (for multiple imputed dataset fitted models)
@@ -113,4 +112,3 @@ catterpillar<-function(x = NULL, fitter= NULL,grp.var=NULL, grp.var.t = NULL, MO
   }
 
 }
-save(catterpillar, file = "C://Users/Gebruiker/Dropbox/R package/bgravesteijn/man/catterpillar.Rd")
