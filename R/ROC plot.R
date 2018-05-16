@@ -1,6 +1,6 @@
 #' Make a ROC plot, with AUC
 #'
-#' @param x Alist of fitted models (for multiple imputed dataset fitted models)
+#' @param x A fitted logistic regression model
 #' @param obs.v A vector of the observed outcome variable: (0,1)
 #' @return Returns a ROC plot containing AUC
 roc.model<-function(x, obs.v){

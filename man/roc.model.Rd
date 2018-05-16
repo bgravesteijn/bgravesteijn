@@ -7,7 +7,7 @@
 roc.model(x, obs.v)
 }
 \arguments{
-\item{x}{Alist of fitted models (for multiple imputed dataset fitted models)}
+\item{x}{A fitted logistic regression model}
 
 \item{obs.v}{A vector of the observed outcome variable: (0,1)}
 }
