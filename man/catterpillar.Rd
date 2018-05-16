@@ -4,15 +4,12 @@
 \alias{catterpillar}
 \title{Make a caterpillar plot for random effects}
 \usage{
-catterpillar(x = NULL, fitter = NULL, grp.var = NULL, grp.var.t = NULL,
-  MOR = TRUE)
+catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, MOR = TRUE)
 }
 \arguments{
 \item{x}{Alist of fitted models (for multiple imputed dataset fitted models)}
 
 \item{fitter}{A character indicating random effects fitting formula}
-
-\item{grp.var}{= character vector for grouping variable}
 
 \item{grp.var.t}{= character indicating type of grouping variable, e.g.: "country"}
 
