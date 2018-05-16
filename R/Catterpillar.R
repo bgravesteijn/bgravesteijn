@@ -1,27 +1,13 @@
-# Hello, world!
-#
-# This is an example function named 'hello'
-# which prints 'Hello, world!'.
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Build and Reload Package:  'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
 
 
-MORcalc <- function(my.var, digits = 2)
-{ # MOR arguments: my.var = variance associated with level 2 clustering variable
-  # digits = number of decimal places to which MOR value will be rounded.
-
-  Median.OR <- round(exp(sqrt(2*my.var)*qnorm(.75)), digits)
-  return(Median.OR)}
-
-
+#' Make a caterpillar plot for random effects
+#'
+#' @param x Alist of fitted models (for multiple imputed dataset fitted models)
+#' @param fitter A character indicating random effects fitting formula
+#' @param grp.var = character vector for grouping variable
+#' @param grp.var.t = character indicating type of grouping variable, e.g.: "country"
+#' @param MOR = logical indicating whether the median odds ratio should be printed, default is TRUE
+#' @return Returns a plot containing mean and 95% CI, with median odds ratio
 catterpillar<-function(x = NULL, fitter= NULL,grp.var=NULL, grp.var.t = NULL, MOR=TRUE){
   #x = list of fitted models (for multiple imputed dataset fitted models)
   #fitter = character indicating random effects fitting formula
