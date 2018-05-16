@@ -25,7 +25,13 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
     return(Median.OR)}
 
   length_list<-length(x)
-  length_grp<-length(data.frame(ranef(x, which=grp.var.t))$grp)
+
+  if(length_list==1){
+    length_grp<-length(data.frame(ranef(x, which=grp.var.t))$grp)
+  }else{
+    length_grp<-length(data.frame(ranef(x[[i]], which=grp.var.t))$grp)
+  }
+
 
   #grp = vector of the grouping variable, e.g. countries/schools...
   #re = vector of the random effects for each value of the grp variable
@@ -47,7 +53,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
         sd[,i]<-data.frame(lme4::ranef(x[[i]], which=grp.var.t, condVar=TRUE))$condsd
         MOR[i]<-MORcalc(data.frame(lme4::VarCorr(x[[i]]))$sdcor^2)
       }
-      plot.df<-data.frame(lme4::ranef(x[[1]], which=grp.var.t, condvar=TRUE))
+      plot.df<-data.frame(lme4::ranef(x[[1]], which=grp.var.t, condVar=TRUE))
       plot.df$condval<-apply(condval, 1, mean)
       plot.df$condsd<-apply(sd, 1, mean)
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
@@ -69,7 +75,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
           sd[,i]<-data.frame(ordinal::ranef(x[[i]], which=grp.var.t, condVar=TRUE))$condsd
           MOR[i]<-MORcalc(data.frame(ordinal::VarCorr(x[[i]]))$sdcor^2)
         }
-        plot.df<-ordinal::ranef(x[[1]], which=grp.var.t, condvar=TRUE)
+        plot.df<-ordinal::ranef(x[[1]], which=grp.var.t, condVar=TRUE)
         plot.df$condval<-apply(condval, 1, mean)
         plot.df$condsd<-apply(sd, 1, mean)
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
@@ -81,6 +87,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
     }
   }
 
+  plot.df$grp <- factor(plot.df$grp, levels = plot.df$grp[order(plot.df$condval)])
   #catterpillar plot
   if(MOR==TRUE){
     ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
