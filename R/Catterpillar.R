@@ -27,9 +27,9 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
   length_list<-length(x)
 
   if(length_list==1){
-    length_grp<-length(data.frame(ranef(x, which=grp.var.t))$grp)
+    length_grp<-length(data.frame(lme4::ranef(x, which=grp.var.t))$grp)
   }else{
-    length_grp<-length(data.frame(ranef(x[[i]], which=grp.var.t))$grp)
+    length_grp<-length(data.frame(lmer::ranef(x[[i]], which=grp.var.t))$grp)
   }
 
 
