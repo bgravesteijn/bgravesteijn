@@ -16,6 +16,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
   library(lme4)
   library(ordinal)
   library(ggplot2)
+  library(mitools)
 
   MORcalc <- function(my.var, digits = 2)
   { # MOR arguments: my.var = variance associated with level 2 clustering variable
@@ -29,7 +30,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
   if(length_list==1){
     length_grp<-length(data.frame(lme4::ranef(x, which=grp.var.t))$grp)
   }else{
-    length_grp<-length(data.frame(lme4::ranef(x[[i]], which=grp.var.t))$grp)
+    length_grp<-length(data.frame(lme4::ranef(x[[1]], which=grp.var.t))$grp)
   }
 
 
@@ -55,7 +56,8 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
       }
       plot.df<-data.frame(lme4::ranef(x[[1]], which=grp.var.t, condVar=TRUE))
       plot.df$condval<-apply(condval, 1, mean)
-      plot.df$condsd<-apply(sd, 1, mean)
+      #extra.var<-(1/(length_list-1))*apply((condval-plot.df$condval), 1, mean)^T+B/M
+      plot.df$condsd<- apply(sd, 1, mean)#+extra.var
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
       plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
       MOR<-mean(MOR)
@@ -77,7 +79,8 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
         }
         plot.df<-ordinal::ranef(x[[1]], which=grp.var.t, condVar=TRUE)
         plot.df$condval<-apply(condval, 1, mean)
-        plot.df$condsd<-apply(sd, 1, mean)
+        #extra.var<-(1/(length_list-1))*apply((condval-plot.df$condval), 1, mean)^T+B/M
+        plot.df$condsd<- apply(sd, 1, mean)#+extra.var
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
         MOR<-mean(MOR)
