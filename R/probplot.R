@@ -7,11 +7,7 @@
 #' @param x formula: formula describing which variables to plot
 #' @param x facet: either "wrap" for facet_wrap or "grid" for facet_grid
 #' @param x ...: additional parameters passed to theme()
-#'
-#' Note: if the formula is not specified, all imputed categorical variables are
-#' plottet. A formula has the structure
-#' categorical variables ~ faceting variables | color variable
-#' By default, .imp (imputation set identifier) will be used as color variable
+
 probplot <- function(x, formula, facet = "wrap", ...) {
   library(plyr)
   library(RColorBrewer)

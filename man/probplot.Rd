@@ -14,12 +14,7 @@ probplot(x, formula, facet = "wrap", ...)
 
 \item{x}{facet: either "wrap" for facet_wrap or "grid" for facet_grid}
 
-\item{x}{...: additional parameters passed to theme()
-
-Note: if the formula is not specified, all imputed categorical variables are
-plottet. A formula has the structure
-categorical variables ~ faceting variables | color variable
-By default, .imp (imputation set identifier) will be used as color variable}
+\item{x}{...: additional parameters passed to theme()}
 }
 \description{
 Parameters:
