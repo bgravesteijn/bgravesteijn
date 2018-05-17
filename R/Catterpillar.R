@@ -27,11 +27,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
 
   length_list<-length(x)
 
-  if(length_list==1){
-    length_grp<-length(data.frame(lme4::ranef(x, which=grp.var.t))$grp)
-  }else{
-    length_grp<-length(data.frame(lme4::ranef(x[[1]], which=grp.var.t))$grp)
-  }
+
 
 
   #grp = vector of the grouping variable, e.g. countries/schools...
@@ -41,6 +37,11 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
   MOR<-rep(NA, length(x))
 
   if (fitter=="glmer"){
+    if(length_list==1){
+      length_grp<-length(data.frame(lme4::ranef(x, which=grp.var.t))$grp)
+    }else{
+      length_grp<-length(data.frame(lme4::ranef(x[[1]], which=grp.var.t))$grp)
+    }
     if(length_list==1){
       plot.df<-data.frame(lme4::ranef(x, which=grp.var.t, condVar=TRUE))
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
@@ -63,6 +64,11 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
       MOR<-mean(MOR)
     }
   }else{
+    if(length_list==1){
+      length_grp<-length(data.frame(ordinal::ranef(x, which=grp.var.t))$grp)
+    }else{
+      length_grp<-length(data.frame(ordinal::ranef(x[[1]], which=grp.var.t))$grp)
+    }
     if(fitter%in%c("clmm2", "clmm")){
       if(length_list==1){
         plot.df<-data.frame(ordinal::ranef(x, which=grp.var.t, condVar=TRUE))
