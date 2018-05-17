@@ -27,9 +27,6 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
 
   length_list<-length(x)
 
-
-
-
   #grp = vector of the grouping variable, e.g. countries/schools...
   #re = vector of the random effects for each value of the grp variable
   #condvar = vector of the conditional variances of the random effects of the grouping variable
@@ -64,14 +61,14 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
       MOR<-mean(MOR)
     }
   }else{
-    if(length_list==1){
+    if(fitter=="clmm"){
+      if(length_list==1){
       length_grp<-length(data.frame(ordinal::ranef(x, which=grp.var.t))$grp)
     }else{
-      length_grp<-length(data.frame(ordinal::ranef(x[[1]], which=grp.var.t))$grp)
+      length_grp<-length(data.frame(ordinal::ranef(x[[1]]))$grp)
     }
-    if(fitter%in%c("clmm2", "clmm")){
       if(length_list==1){
-        plot.df<-data.frame(ordinal::ranef(x, which=grp.var.t, condVar=TRUE))
+        plot.df<-data.frame(ordinal::ranef(x, condVar=TRUE))
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
         MOR<-MORcalc(data.frame(ordinal::VarCorr(x))$sdcor^2)
@@ -79,11 +76,11 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
         condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
         sd<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
         for (i in 1:ncol(condval)){
-          condval[,i]<-data.frame(ordinal::ranef(x[[i]], which=grp.var.t, condVar=TRUE))$condval
-          sd[,i]<-data.frame(ordinal::ranef(x[[i]], which=grp.var.t, condVar=TRUE))$condsd
+          condval[,i]<-data.frame(ordinal::ranef(x[[i]], condVar=TRUE))$condval
+          sd[,i]<-data.frame(ordinal::ranef(x[[i]], condVar=TRUE))$condsd
           MOR[i]<-MORcalc(data.frame(ordinal::VarCorr(x[[i]]))$sdcor^2)
         }
-        plot.df<-ordinal::ranef(x[[1]], which=grp.var.t, condVar=TRUE)
+        plot.df<-ordinal::ranef(x[[1]], condVar=TRUE)
         plot.df$condval<-apply(condval, 1, mean)
         #extra.var<-(1/(length_list-1))*apply((condval-plot.df$condval), 1, mean)^T+B/M
         plot.df$condsd<- apply(sd, 1, mean)#+extra.var
@@ -92,12 +89,58 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
         MOR<-mean(MOR)
       }
     }else{
+      if(length_list==1){
+        length_grp<-length(x$ranef)
+      }else{
+        length_grp<-length(x[[1]]$ranef)
+      }
+      if(fitter=="clmm2"){
+        if(length_list==1){
+          plot.df<-data.frame(condval=x$ranef, condsd=sqrt(x$condVar))
+          plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
+          plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
+          MOR<-MORcalc(x$stDev^2)
+          plot.df$grp<-rownames(plot.df)
+        }else{
+          condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
+          sd<-condval
+          for (i in 1:ncol(sd)){
+            condval[,i]<-x[[i]]$ranef
+            sd[,i]<-sqrt(x[[i]]$condVar)
+            MOR[i]<-MORcalc(x[[i]]$stDev^2)
+          }
+          plot.df<-data.frame(condval=x[[1]]$ranef, condsd=x[[1]]$condVar)
+          plot.df$condval<-apply(condval, 1, mean)
+          #extra.var<-(1/(length_list-1))*apply((condval-plot.df$condval), 1, mean)^T+B/M
+          plot.df$condsd<- apply(sd, 1, mean)#+extra.var
+          plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
+          plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
+          MOR<-mean(MOR)
+          plot.df$grp<-rownames(plot.df)
+        }
+      }else {
       print("This fitter is not yet available in this package")
+      }
+
     }
   }
 
   plot.df$grp <- factor(plot.df$grp, levels = plot.df$grp[order(plot.df$condval)])
+
+
   #catterpillar plot
+  if(fitter=="clmm2"){
+    if(MOR==TRUE){
+      ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
+        geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
+        scale_y_continuous(name = "Log odds")+
+        annotate("text", x=3, y=2, label=paste("MOR =", MOR))
+    }else{
+      ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
+        geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
+        scale_y_continuous(name = "Log odds")
+    }
+  }else{
   if(MOR==TRUE){
     ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
       geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
@@ -108,5 +151,8 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
       geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
       scale_y_continuous(name = "Log odds")
   }
+  }
 
 }
+
+
