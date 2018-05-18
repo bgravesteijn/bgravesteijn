@@ -16,7 +16,7 @@ catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, MOR = TRUE)
 \item{MOR}{= logical indicating whether the median odds ratio should be printed, default is TRUE}
 }
 \value{
-Returns a plot containing mean and 95% CI, with median odds ratio
+Returns a plot containing mean and 95% CI, with median odds ratio, the precision is underestimated in case that multiple imputed fits are used.
 }
 \description{
 Make a caterpillar plot for random effects

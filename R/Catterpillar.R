@@ -6,7 +6,7 @@
 #' @param fitter A character indicating random effects fitting formula
 #' @param grp.var.t = character indicating type of grouping variable, e.g.: "country"
 #' @param MOR = logical indicating whether the median odds ratio should be printed, default is TRUE
-#' @return Returns a plot containing mean and 95% CI, with median odds ratio
+#' @return Returns a plot containing mean and 95% CI, with median odds ratio, the precision is underestimated in case that multiple imputed fits are used.
 catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
   #x = list of fitted models (for multiple imputed dataset fitted models)
   #fitter = character indicating random effects fitting formula
