@@ -7,6 +7,5 @@ Maintainer: Benjamin Gravesteijn <b.gravesteijn@erasmusmc.nl>
 Description: One of the more frequently used functions I use.
 License: GPL-2
 Encoding: UTF-8
-LazyData: false
 Depends: ordinal, lme4, ggplot2, data.table, ROCR 
 RoxygenNote: 6.0.1
