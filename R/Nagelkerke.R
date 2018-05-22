@@ -7,7 +7,7 @@
 #'
 #' @return the Nagelkerke R2, as a numer between 0 and 1
 Nagelkerke<-function(fit=NULL, nullmod=NULL, data=NULL){
-  if (length(x)==1){
+  if (length(fit)==1){
     CoxSnell <- 1 - exp(-(2 / nrow(data)) * (logLik(fit) - logLik(nullmod)))
     R2 <- CoxSnell / (1 - exp((2 * nrow(data) ^ (-1)) * logLik(nullmod)))
   }else{
