@@ -4,10 +4,12 @@
 #'
 #' @param x Alist of fitted models (for multiple imputed dataset fitted models)
 #' @param fitter A character indicating random effects fitting formula
-#' @param grp.var.t = character indicating type of grouping variable, e.g.: "country"
-#' @param MOR = logical indicating whether the median odds ratio should be printed, default is TRUE
+#' @param grp.var.t character indicating type of grouping variable, e.g.: "country"
+#' @param printMOR logical indicating whether the median odds ratio should be printed, default is TRUE
+#' @param xMOR x coordinate of the text of MOR (default is 3)
+#' @param yMOR y coordinate of the text of MOR (default is 2)
 #' @return Returns a plot containing mean and 95% CI, with median odds ratio, the precision is underestimated in case that multiple imputed fits are used.
-catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
+catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, xMOR=3, yMOR=2){
   #x = list of fitted models (for multiple imputed dataset fitted models)
   #fitter = character indicating random effects fitting formula
   #grp.var.t = character indicating type of grouping variable, e.g.: "country"
@@ -130,22 +132,22 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, MOR=TRUE){
 
   #catterpillar plot
   if(fitter=="clmm2"){
-    if(MOR==TRUE){
+    if(plotMOR){
       ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
         geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
         scale_y_continuous(name = "Log odds")+
-        annotate("text", x=3, y=2, label=paste("MOR =", MOR))
+        annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR))
     }else{
       ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
         geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
         scale_y_continuous(name = "Log odds")
     }
   }else{
-  if(MOR==TRUE){
+  if(plotMOR){
     ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
       geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
       scale_y_continuous(name = "Log odds")+
-      annotate("text", x=3, y=2, label=paste("MOR =", MOR))
+      annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR))
   }else{
     ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
       geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
