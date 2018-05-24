@@ -36,6 +36,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
   MOR<-rep(NA, length(x))
 
   if (fitter=="glmer"){
+    re.no<-which(data.frame(lme4::VarCorr(x[[1]], which=grp.var.t))$grp==grp.var.t)
     if(length_list==1){
       length_grp<-length(data.frame(lme4::ranef(x, which=grp.var.t))$grp)
     }else{
@@ -45,14 +46,14 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
       plot.df<-data.frame(lme4::ranef(x, which=grp.var.t, condVar=TRUE))
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
       plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
-      MOR<-MORcalc(data.frame(lme4::VarCorr(x))$sdcor^2)
+      MOR<-MORcalc(data.frame(lme4::VarCorr(x))[re.no,]$sdcor^2)
     }else{
       condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
       sd<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
       for (i in 1:length_list){
         condval[,i]<-data.frame(lme4::ranef(x[[i]], which=grp.var.t, condVar=TRUE))$condval
         sd[,i]<-data.frame(lme4::ranef(x[[i]], which=grp.var.t, condVar=TRUE))$condsd
-        MOR[i]<-MORcalc(data.frame(lme4::VarCorr(x[[i]]))$sdcor^2)
+        MOR[i]<-MORcalc(data.frame(lme4::VarCorr(x[[i]]))[re.no,]$sdcor^2)
       }
       plot.df<-data.frame(lme4::ranef(x[[1]], which=grp.var.t, condVar=TRUE))
       plot.df$condval<-apply(condval, 1, mean)
@@ -64,6 +65,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
     }
   }else{
     if(fitter=="clmm"){
+      re.no<-which(data.frame(ordinal::VarCorr(x))$grp==grp.var.t)
       if(length_list==1){
       length_grp<-length(data.frame(ordinal::ranef(x, which=grp.var.t))$grp)
     }else{
@@ -73,14 +75,14 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
         plot.df<-data.frame(ordinal::ranef(x, condVar=TRUE))
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
-        MOR<-MORcalc(data.frame(ordinal::VarCorr(x))$sdcor^2)
+        MOR<-MORcalc(data.frame(ordinal::VarCorr(x))[re.no,]$sdcor^2)
       }else{
         condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
         sd<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
         for (i in 1:ncol(condval)){
-          condval[,i]<-data.frame(ordinal::ranef(x[[i]], condVar=TRUE))$condval
-          sd[,i]<-data.frame(ordinal::ranef(x[[i]], condVar=TRUE))$condsd
-          MOR[i]<-MORcalc(data.frame(ordinal::VarCorr(x[[i]]))$sdcor^2)
+          condval[,i]<-data.frame(ordinal::ranef(x[[i]], condVar=TRUE))[re.no,]$condval
+          sd[,i]<-data.frame(ordinal::ranef(x[[i]], condVar=TRUE))[re.no,]$condsd
+          MOR[i]<-MORcalc(data.frame(ordinal::VarCorr(x[[i]]))[re.no,]$sdcor^2)
         }
         plot.df<-ordinal::ranef(x[[1]], condVar=TRUE)
         plot.df$condval<-apply(condval, 1, mean)
@@ -125,35 +127,22 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
       }
 
     }
-  }
+
 
   plot.df$grp <- factor(plot.df$grp, levels = plot.df$grp[order(plot.df$condval)])
 
+plot<-ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
+  geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
+  scale_y_continuous(name = "Log odds")
 
   #catterpillar plot
-  if(fitter=="clmm2"){
     if(plotMOR){
-      ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
-        geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
-        scale_y_continuous(name = "Log odds")+
-        annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR))
+      plot+annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR))
     }else{
-      ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
-        geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
-        scale_y_continuous(name = "Log odds")
+      plot
     }
-  }else{
-  if(plotMOR){
-    ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
-      geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
-      scale_y_continuous(name = "Log odds")+
-      annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR))
-  }else{
-    ggplot(data = plot.df, aes(x=grp, y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
-      geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
-      scale_y_continuous(name = "Log odds")
   }
-  }
+
 
 }
 
