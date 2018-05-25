@@ -4,16 +4,21 @@
 \alias{catterpillar}
 \title{Make a caterpillar plot for random effects}
 \usage{
-catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, MOR = TRUE)
+catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRUE,
+  xMOR = 3, yMOR = 2)
 }
 \arguments{
 \item{x}{Alist of fitted models (for multiple imputed dataset fitted models)}
 
 \item{fitter}{A character indicating random effects fitting formula}
 
-\item{grp.var.t}{= character indicating type of grouping variable, e.g.: "country"}
+\item{grp.var.t}{character indicating type of grouping variable, e.g.: "country"}
 
-\item{MOR}{= logical indicating whether the median odds ratio should be printed, default is TRUE}
+\item{xMOR}{x coordinate of the text of MOR (default is 3)}
+
+\item{yMOR}{y coordinate of the text of MOR (default is 2)}
+
+\item{printMOR}{logical indicating whether the median odds ratio should be printed, default is TRUE}
 }
 \value{
 Returns a plot containing mean and 95% CI, with median odds ratio, the precision is underestimated in case that multiple imputed fits are used.
