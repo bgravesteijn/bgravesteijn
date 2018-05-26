@@ -141,9 +141,9 @@ plot<-ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointr
 
   #catterpillar plot
     if(plotMOR){
-      plot+annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR))
+      print(plot+annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR)))
     }else{
-      plot
+      print(plot)
     }
   }
 
