@@ -8,9 +8,9 @@ catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRUE,
   xMOR = 3, yMOR = 2)
 }
 \arguments{
-\item{x}{Alist of fitted models (for multiple imputed dataset fitted models)}
+\item{x}{A (list of) fitted model(s) (for multiple imputed dataset fitted models)}
 
-\item{fitter}{A character indicating random effects fitting formula}
+\item{fitter}{A character indicating random effects fitting formula, e.g: "glmer"}
 
 \item{grp.var.t}{character indicating type of grouping variable, e.g.: "country"}
 
@@ -21,8 +21,8 @@ catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRUE,
 \item{printMOR}{logical indicating whether the median odds ratio should be printed, default is TRUE}
 }
 \value{
-Returns a plot containing mean and 95% CI, with median odds ratio, the precision is underestimated in case that multiple imputed fits are used.
+Returns a plot containing mean and 95% CI, with pooled conditional variances using Rubin's rules.
 }
 \description{
-Make a caterpillar plot for random effects
+Make a caterpillar plot for random effects. Please use carefully, it bites.
 }

@@ -15,8 +15,6 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
   #grp.var.t = character indicating type of grouping variable, e.g.: "country"
   #MOR = logical indicating whether the median odds ratio should be printed, default is TRUE
 
-  library(lme4)
-  library(ordinal)
   library(ggplot2)
   library(mitools)
 
@@ -36,18 +34,20 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
   MOR<-rep(NA, length(x))
 
   if (fitter=="glmer"){
-    re.no<-which(data.frame(lme4::VarCorr(x[[1]], which=grp.var.t))$grp==grp.var.t)
+
     if(length_list==1){
       length_grp<-length(data.frame(lme4::ranef(x, which=grp.var.t))$grp)
     }else{
       length_grp<-length(data.frame(lme4::ranef(x[[1]], which=grp.var.t))$grp)
     }
     if(length_list==1){
+      re.no<-which(data.frame(lme4::VarCorr(x, which=grp.var.t))$grp==grp.var.t)
       plot.df<-data.frame(lme4::ranef(x, which=grp.var.t, condVar=TRUE))
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
       plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
       MOR<-MORcalc(data.frame(lme4::VarCorr(x))[re.no,]$sdcor^2)
     }else{
+      re.no<-which(data.frame(lme4::VarCorr(x[[1]], which=grp.var.t))$grp==grp.var.t)
       condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
       sd<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
       for (i in 1:length_list){
@@ -66,32 +66,33 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
     }
   }else{
     if(fitter=="clmm"){
-      re.no<-which(data.frame(ordinal::VarCorr(x))$grp==grp.var.t)
       if(length_list==1){
-      length_grp<-length(data.frame(ordinal::ranef(x, which=grp.var.t))$grp)
+      length_grp<-nrow(data.frame(ordinal::ranef(x)))
     }else{
-      length_grp<-length(data.frame(ordinal::ranef(x[[1]]))$grp)
+      length_grp<-nrow(data.frame(ordinal::ranef(x[[1]])))
     }
       if(length_list==1){
-        plot.df<-data.frame(ordinal::ranef(x, condVar=TRUE))
+        plot.df<-data.frame(condval=data.frame(ordinal::ranef(x))$X.Intercept.)
+        plot.df$condsd<-sqrt(data.frame(ordinal::condVar(x)))$X.Intercept.
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
-        MOR<-MORcalc(data.frame(ordinal::VarCorr(x))[re.no,]$sdcor^2)
+        MOR<-MORcalc(data.frame(ordinal::VarCorr(x))$X.Intercept.)
       }else{
         condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
         sd<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
         for (i in 1:ncol(condval)){
-          condval[,i]<-data.frame(ordinal::ranef(x[[i]], condVar=TRUE))[re.no,]$condval
-          sd[,i]<-data.frame(ordinal::ranef(x[[i]], condVar=TRUE))[re.no,]$condsd
-          MOR[i]<-MORcalc(data.frame(ordinal::VarCorr(x[[i]]))[re.no,]$sdcor^2)
+          condval[,i]<-data.frame(ordinal::ranef(x[[i]]))$X.Intercept.
+          sd[,i]<-sqrt(data.frame(ordinal::condVar(x[[i]])))$X.Intercept.
+          MOR[i]<-MORcalc(data.frame(ordinal::VarCorr(x[[i]]))$X.Intercept.)
         }
-        plot.df<-ordinal::ranef(x[[1]], condVar=TRUE)
+        plot.df<-data.frame(condval=data.frame(ordinal::ranef(x[[1]], condVar=TRUE))$X.Intercept.)
         plot.df$condval<-apply(condval, 1, mean)
         #Rubin's rules for pooling variances
         extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)
         plot.df$condsd<- apply(sd, 1, mean)+extra.var
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
+        plot.df$grp<-rownames(plot.df)
         MOR<-mean(MOR)
       }
     }else{
@@ -118,7 +119,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
           plot.df<-data.frame(condval=x[[1]]$ranef, condsd=x[[1]]$condVar)
           plot.df$condval<-apply(condval, 1, mean)
           #Rubin's rules for pooling variances
-          extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)          plot.df$condsd<- apply(sd, 1, mean)#+extra.var
+          extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)
           plot.df$condsd<-apply(sd, 1, mean)+extra.var
           plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
           plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
@@ -145,7 +146,6 @@ plot<-ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointr
       plot
     }
   }
-
 
 }
 
