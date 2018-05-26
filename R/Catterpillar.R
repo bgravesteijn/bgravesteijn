@@ -96,12 +96,12 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
         MOR<-mean(MOR)
       }
     }else{
-      if(length_list==1){
-        length_grp<-length(x$ranef)
-      }else{
-        length_grp<-length(x[[1]]$ranef)
-      }
       if(fitter=="clmm2"){
+        if(length_list==1){
+          length_grp<-length(x$ranef)
+        }else{
+          length_grp<-length(x[[1]]$ranef)
+        }
         if(length_list==1){
           plot.df<-data.frame(condval=x$ranef, condsd=sqrt(x$condVar))
           plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
@@ -131,21 +131,20 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
       }
 
     }
-
+   }
 
   plot.df$grp <- factor(plot.df$grp, levels = plot.df$grp[order(plot.df$condval)])
 
-plot<-ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
-  geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
-  scale_y_continuous(name = "Log odds")
-
   #catterpillar plot
     if(plotMOR){
-      print(plot+annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR)))
+      ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
+        geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
+        scale_y_continuous(name = "Log odds")+annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR))
     }else{
-      print(plot)
+      ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
+        geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
+        scale_y_continuous(name = "Log odds")
     }
-  }
 
 }
 
