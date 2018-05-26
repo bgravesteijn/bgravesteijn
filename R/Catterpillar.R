@@ -8,7 +8,7 @@
 #' @param printMOR logical indicating whether the median odds ratio should be printed, default is TRUE
 #' @param xMOR x coordinate of the text of MOR (default is 3)
 #' @param yMOR y coordinate of the text of MOR (default is 2)
-#' @return Returns a plot containing mean and 95% CI, with median odds ratio, the precision is underestimated in case that multiple imputed fits are used.
+#' @return Returns a plot containing mean and 95% CI, with median odds ratio, using Rubin's rules to pool the variances
 catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, xMOR=3, yMOR=2){
   #x = list of fitted models (for multiple imputed dataset fitted models)
   #fitter = character indicating random effects fitting formula
@@ -57,8 +57,9 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
       }
       plot.df<-data.frame(lme4::ranef(x[[1]], which=grp.var.t, condVar=TRUE))
       plot.df$condval<-apply(condval, 1, mean)
-      #extra.var<-(1/(length_list-1))*apply((condval-plot.df$condval), 1, mean)^T+B/M
-      plot.df$condsd<- apply(sd, 1, mean)#+extra.var
+      #Rubin's rules for pooling variances
+      extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)
+      plot.df$condsd<- apply(sd, 1, mean)+extra.var
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
       plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
       MOR<-mean(MOR)
@@ -86,8 +87,9 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
         }
         plot.df<-ordinal::ranef(x[[1]], condVar=TRUE)
         plot.df$condval<-apply(condval, 1, mean)
-        #extra.var<-(1/(length_list-1))*apply((condval-plot.df$condval), 1, mean)^T+B/M
-        plot.df$condsd<- apply(sd, 1, mean)#+extra.var
+        #Rubin's rules for pooling variances
+        extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)
+        plot.df$condsd<- apply(sd, 1, mean)+extra.var
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
         MOR<-mean(MOR)
@@ -115,8 +117,9 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
           }
           plot.df<-data.frame(condval=x[[1]]$ranef, condsd=x[[1]]$condVar)
           plot.df$condval<-apply(condval, 1, mean)
-          #extra.var<-(1/(length_list-1))*apply((condval-plot.df$condval), 1, mean)^T+B/M
-          plot.df$condsd<- apply(sd, 1, mean)#+extra.var
+          #Rubin's rules for pooling variances
+          extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)          plot.df$condsd<- apply(sd, 1, mean)#+extra.var
+          plot.df$condsd<-apply(sd, 1, mean)+extra.var
           plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
           plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
           MOR<-mean(MOR)
