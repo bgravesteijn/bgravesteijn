@@ -58,7 +58,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
       plot.df<-data.frame(lme4::ranef(x[[1]], which=grp.var.t, condVar=TRUE))
       plot.df$condval<-apply(condval, 1, mean)
       #Rubin's rules for pooling variances
-      extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)
+      extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){ (x-plot.df$condval)^2}), 1, sum))
       plot.df$condsd<- apply(sd, 1, mean)+extra.var
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
       plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
@@ -88,7 +88,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
         plot.df<-data.frame(condval=data.frame(ordinal::ranef(x[[1]], condVar=TRUE))$X.Intercept.)
         plot.df$condval<-apply(condval, 1, mean)
         #Rubin's rules for pooling variances
-        extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)
+        extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){ (x-plot.df$condval)^2}), 1, sum))
         plot.df$condsd<- apply(sd, 1, mean)+extra.var
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
@@ -119,7 +119,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
           plot.df<-data.frame(condval=x[[1]]$ranef, condsd=x[[1]]$condVar)
           plot.df$condval<-apply(condval, 1, mean)
           #Rubin's rules for pooling variances
-          extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){x-plot.df$condval}), 1, mean)^2)
+          extra.var<-((length_list+1)/(length_list*(length_list-1)))*(apply(apply(condval, 2, function(x){ (x-plot.df$condval)^2}), 1, sum))
           plot.df$condsd<-apply(sd, 1, mean)+extra.var
           plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
           plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
