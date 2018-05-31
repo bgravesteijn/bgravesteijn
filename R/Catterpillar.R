@@ -9,7 +9,7 @@
 #' @param xMOR x coordinate of the text of MOR (default is 3)
 #' @param yMOR y coordinate of the text of MOR (default is 2)
 #' @return Returns a plot containing mean and 95% CI, with median odds ratio, using Rubin's rules to pool the variances
-catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, xMOR=3, yMOR=2){
+catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,plotlabels=TRUE, xMOR=3, yMOR=2){
   #x = list of fitted models (for multiple imputed dataset fitted models)
   #fitter = character indicating random effects fitting formula
   #grp.var.t = character indicating type of grouping variable, e.g.: "country"
@@ -136,14 +136,21 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE, x
   plot.df$grp <- factor(plot.df$grp, levels = plot.df$grp[order(plot.df$condval)])
 
   #catterpillar plot
+  plot<-ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
+    geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
+    scale_y_continuous(name = "Log odds")
     if(plotMOR){
-      ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
-        geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
-        scale_y_continuous(name = "Log odds")+annotate("text", x=xMOR, y=yMOR, label=paste("MOR =", MOR))
+      if(plotlabels){
+        plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", round(MOR,2)))
+      }else{
+        plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", round(MOR,2)))+theme(axis.text.x=element.blank())
+      }
     }else{
-      ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
-        geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
-        scale_y_continuous(name = "Log odds")
+      if(plotlabels){
+        plot
+      }else{
+        plot+theme(axis.text.x=element.blank())
+      }
     }
 
 }
