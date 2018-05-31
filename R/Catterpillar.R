@@ -143,13 +143,13 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
       if(plotlabels){
         plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", round(MOR,2)))
       }else{
-        plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", round(MOR,2)))+theme(axis.text.x=element.blank())
+        plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", round(MOR,2)))+theme(axis.text.x=element_blank())
       }
     }else{
       if(plotlabels){
         plot
       }else{
-        plot+theme(axis.text.x=element.blank())
+        plot+theme(axis.text.x=element_blank())
       }
     }
 
