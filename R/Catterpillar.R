@@ -9,7 +9,7 @@
 #' @param xMOR x coordinate of the text of MOR (default is 3)
 #' @param yMOR y coordinate of the text of MOR (default is 2)
 #' @return Returns a plot containing mean and 95% CI, with median odds ratio, using Rubin's rules to pool the variances
-catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,plotlabels=TRUE, xMOR=3, yMOR=2){
+catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,plotlabels=TRUE, xMOR=3, yMOR=2, set.MOR=NULL){
   #x = list of fitted models (for multiple imputed dataset fitted models)
   #fitter = character indicating random effects fitting formula
   #grp.var.t = character indicating type of grouping variable, e.g.: "country"
@@ -135,6 +135,9 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
 
   plot.df$grp <- factor(plot.df$grp, levels = plot.df$grp[order(plot.df$condval)])
 
+  if(is.null(set.MOR)){
+    MOR<-set.MOR
+  }
   #catterpillar plot
   plot<-ggplot(data = plot.df, aes(x=grp,y=condval, ymin=lo, ymax=hi))+geom_pointrange()+
     geom_hline(yintercept=0, linetype=2)+coord_flip()+xlab(label = grp.var.t)+
