@@ -1,7 +1,8 @@
 #' Calculate the median odds ratio and CI using bootstrap
 #'
 #' @param formula a character containing the formula for the glmer function
-#' @param data a (list of) data.frame(s) or data.table(s) containing the data on which the model was fitted
+#' @param data a (list of) data.frame(s) or data.table(s), or a MIDS object
+#'  containing the data on which the model was fitted
 #' @param grp.var.t the grouping variable, e.g.: "country"
 MOR.ci.calc <- function (formula=NULL, data=NULL, grp.var.t=NULL){
 
@@ -13,7 +14,15 @@ MOR.ci.calc <- function (formula=NULL, data=NULL, grp.var.t=NULL){
     return(mor)
    }
 
-  n.fit<-length(fit)
+   if(class(data)=="mids"){
+     data.l<-vector("list", data$m)
+     for(i in 1:data$m){
+       data.l[[i]]<-mice::complete(data, i)
+     }
+     data<-data.l
+   }
+
+  n.fit<-ifelse(class(data)=="list",length(data),1)
 
  if(n.fit==1){
   MORS<-boot::boot(data = data, statistic = fit.mor,R = 1000)
