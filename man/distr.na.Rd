@@ -13,5 +13,5 @@ distr.na(x = NULL)
 Returns a plot showing distribution and missingness of variables
 }
 \description{
-Distribution and NA plot
+This plot is copyright of Nicole Erler. Follow her course at NIHES: missing values.
 }

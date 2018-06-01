@@ -7,7 +7,7 @@
 #' @param x formula: formula describing which variables to plot
 #' @param x facet: either "wrap" for facet_wrap or "grid" for facet_grid
 #' @param x ...: additional parameters passed to theme()
-
+#' @description This plot is copyright of Nicole Erler. Follow her course at NIHES: missing values. It was an eye-opener for me
 probplot <- function(x, formula, facet = "wrap", ...) {
   library(plyr)
   library(RColorBrewer)

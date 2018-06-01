@@ -17,5 +17,8 @@ probplot(x, formula, facet = "wrap", ...)
 \item{x}{...: additional parameters passed to theme()}
 }
 \description{
+This plot is copyright of Nicole Erler. Follow her course at NIHES: missing values. It was an eye-opener for me
+}
+\details{
 Parameters:
 }

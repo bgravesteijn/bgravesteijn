@@ -3,6 +3,7 @@
 #'
 #' @param x An object with data
 #' @return Returns a plot showing distribution and missingness of variables
+#' @description This plot is copyright of Nicole Erler. Follow her course at NIHES: missing values.
 distr.na<-function(x=NULL){
   nc <- max(5, ceiling(sqrt(ncol(x))))
   nr <- ceiling(ncol(x) / nc)
