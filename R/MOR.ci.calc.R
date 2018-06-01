@@ -5,6 +5,7 @@
 #'  containing the data on which the model was fitted
 #' @param grp.var.t the grouping variable, e.g.: "country"
 #' @param set.subset a logical vector, indicating whether a subject is included or not in the analysis
+#' @description  Calculate the median odds ratio and CI using bootstrap (1000 replicate samples). Note: this takes a long time... So maybe plan a Titanic night with your colleagues while using this function.
 MOR.ci.calc <- function (formula=NULL, data=NULL, grp.var.t=NULL, set.subset=NULL){
 
    fit.mor<-function(x, indices){
@@ -37,6 +38,6 @@ MOR.ci.calc <- function (formula=NULL, data=NULL, grp.var.t=NULL, set.subset=NUL
    MORS<-unlist(mors.list)
  }
  MOR.final<-paste("MOR =",quantile(MORS, probs=0.5),
-                  "(95% CI:", quantile(MORS, probs=0.025), "-", quantile(MORS, probs=0.0975))
+                  "(95% CI:", quantile(MORS, probs=0.025), "-", quantile(MORS, probs=0.975), ")")
  return(MOR.final)
 }

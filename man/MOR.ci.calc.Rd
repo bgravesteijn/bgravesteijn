@@ -4,7 +4,8 @@
 \alias{MOR.ci.calc}
 \title{Calculate the median odds ratio and CI using bootstrap}
 \usage{
-MOR.ci.calc(formula = NULL, data = NULL, grp.var.t = NULL)
+MOR.ci.calc(formula = NULL, data = NULL, grp.var.t = NULL,
+  set.subset = NULL)
 }
 \arguments{
 \item{formula}{a character containing the formula for the glmer function}
@@ -13,7 +14,9 @@ MOR.ci.calc(formula = NULL, data = NULL, grp.var.t = NULL)
 containing the data on which the model was fitted}
 
 \item{grp.var.t}{the grouping variable, e.g.: "country"}
+
+\item{set.subset}{a logical vector, indicating whether a subject is included or not in the analysis}
 }
 \description{
-Calculate the median odds ratio and CI using bootstrap
+Calculate the median odds ratio and CI using bootstrap (1000 replicate samples). Note: this takes a long time... So maybe plan a Titanic night with your colleagues while using this function.
 }

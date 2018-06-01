@@ -5,7 +5,7 @@
 \title{Make a caterpillar plot for random effects}
 \usage{
 catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRUE,
-  plotlabels = TRUE, xMOR = 3, yMOR = 2)
+  plotlabels = TRUE, xMOR = 3, yMOR = 2, set.MOR = NULL)
 }
 \arguments{
 \item{x}{Alist of fitted models (for multiple imputed dataset fitted models)}
