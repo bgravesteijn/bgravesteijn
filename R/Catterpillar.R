@@ -135,7 +135,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
 
   plot.df$grp <- factor(plot.df$grp, levels = plot.df$grp[order(plot.df$condval)])
 
-  if(is.null(set.MOR)){
+  if(!is.null(set.MOR)){
     MOR<-set.MOR
   }
   #catterpillar plot
