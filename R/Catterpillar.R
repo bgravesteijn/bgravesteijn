@@ -45,7 +45,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
       plot.df<-data.frame(lme4::ranef(x, which=grp.var.t, condVar=TRUE))
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
       plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
-      MOR<-MORcalc(data.frame(lme4::VarCorr(x))[re.no,]$sdcor^2)
+      MOR<-round(MORcalc(data.frame(lme4::VarCorr(x))[re.no,]$sdcor^2),2)
     }else{
       re.no<-which(data.frame(lme4::VarCorr(x[[1]], which=grp.var.t))$grp==grp.var.t)
       condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
@@ -62,7 +62,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
       plot.df$condsd<- apply(sd, 1, mean)+extra.var
       plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
       plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
-      MOR<-mean(MOR)
+      MOR<-round(mean(MOR),2)
     }
   }else{
     if(fitter=="clmm"){
@@ -76,7 +76,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
         plot.df$condsd<-sqrt(data.frame(ordinal::condVar(x)))$X.Intercept.
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
-        MOR<-MORcalc(data.frame(ordinal::VarCorr(x))$X.Intercept.)
+        MOR<-round(MORcalc(data.frame(ordinal::VarCorr(x))$X.Intercept.),2)
       }else{
         condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
         sd<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
@@ -93,7 +93,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
         plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
         plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
         plot.df$grp<-rownames(plot.df)
-        MOR<-mean(MOR)
+        MOR<-round(mean(MOR),2)
       }
     }else{
       if(fitter=="clmm2"){
@@ -106,7 +106,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
           plot.df<-data.frame(condval=x$ranef, condsd=sqrt(x$condVar))
           plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
           plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
-          MOR<-MORcalc(x$stDev^2)
+          MOR<-round(MORcalc(x$stDev^2),2)
           plot.df$grp<-rownames(plot.df)
         }else{
           condval<-matrix(data = rep(NA, length_grp*length_list), ncol = length_list)
@@ -123,7 +123,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
           plot.df$condsd<-apply(sd, 1, mean)+extra.var
           plot.df$lo<-plot.df$condval-1.96*plot.df$condsd
           plot.df$hi<-plot.df$condval+1.96*plot.df$condsd
-          MOR<-mean(MOR)
+          MOR<-round(mean(MOR),2)
           plot.df$grp<-rownames(plot.df)
         }
       }else {
@@ -144,9 +144,9 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
     scale_y_continuous(name = "Log odds")
     if(plotMOR){
       if(plotlabels){
-        plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", round(MOR,2)))
+        plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", MOR))
       }else{
-        plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", round(MOR,2)))+theme(axis.text.y=element_blank())
+        plot+annotate("text", x=yMOR, y=xMOR, label=paste("MOR =", MOR))+theme(axis.text.y=element_blank())
       }
     }else{
       if(plotlabels){
