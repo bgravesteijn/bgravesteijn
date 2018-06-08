@@ -5,7 +5,7 @@
 \title{Calculate the median odds ratio and CI using bootstrap}
 \usage{
 MOR.ci.calc(formula = NULL, data = NULL, grp.var.t = NULL,
-  set.subset = NULL)
+  cluster.var = NULL, set.subset = NULL, reps = 1000)
 }
 \arguments{
 \item{formula}{a character containing the formula for the glmer function}
@@ -13,9 +13,13 @@ MOR.ci.calc(formula = NULL, data = NULL, grp.var.t = NULL,
 \item{data}{a (list of) data.frame(s) or data.table(s), or a MIDS object
 containing the data on which the model was fitted}
 
-\item{grp.var.t}{the grouping variable, e.g.: "country"}
+\item{grp.var.t}{the grouping variable of interest, e.g.: "country"}
+
+\item{cluster.var}{cluster variable to use for clustered bootstrap sampling (vector)}
 
 \item{set.subset}{a logical vector, indicating whether a subject is included or not in the analysis}
+
+\item{rep}{number of bootstrap replicates should be used}
 }
 \description{
 Calculate the median odds ratio and CI using bootstrap (1000 replicate samples). Note: this takes a long time... So maybe plan a Titanic night with your colleagues while using this function.
