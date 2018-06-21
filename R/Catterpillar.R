@@ -33,7 +33,7 @@ catterpillar<-function(x = NULL, fitter= NULL, grp.var.t = NULL, plotMOR=TRUE,pl
   #xlab = character indicating type of grouping variable, e.g.: "country"
   MOR<-rep(NA, length(x))
 
-  if (fitter=="glmer"){
+  if (fitter%in%c("glmer", "lmer")){
 
     if(length_list==1){
       length_grp<-length(data.frame(lme4::ranef(x, which=grp.var.t))$grp)
