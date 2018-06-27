@@ -5,7 +5,8 @@
 \title{Make a caterpillar plot for random effects}
 \usage{
 catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRUE,
-  plotlabels = TRUE, xMOR = 3, yMOR = 2, set.MOR = NULL)
+  plotlabels = TRUE, xMOR = 3, yMOR = 2, set.MOR = NULL,
+  col.group = NULL)
 }
 \arguments{
 \item{x}{Alist of fitted models (for multiple imputed dataset fitted models)}
@@ -17,6 +18,8 @@ catterpillar(x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRUE,
 \item{xMOR}{x coordinate of the text of MOR (default is 3)}
 
 \item{yMOR}{y coordinate of the text of MOR (default is 2)}
+
+\item{col.group}{vector of binary (0 or 1) grouping variable}
 
 \item{printMOR}{logical indicating whether the median odds ratio should be printed, default is TRUE}
 }
