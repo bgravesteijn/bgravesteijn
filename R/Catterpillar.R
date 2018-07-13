@@ -158,7 +158,7 @@ catterpillar<-function (x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRU
     MOR <- set.MOR
   }
   plot.df$col.group<-col.group
-  if(col.group==NULL){
+  if(is.null(col.group)){
     plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi))
     + geom_pointrange() + geom_hline(yintercept = 0, scale_y_continuous(name = "Log odds"))
   }else{
