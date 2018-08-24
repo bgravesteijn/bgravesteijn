@@ -13,7 +13,7 @@ calc.CER.lrm <- function(mids.data = NULL, orig.data=NULL,
                          subset.cer=NULL){
 ##stage 1##
 fml.st1 <- as.formula(paste(therapy, "~", instrument))
-st1 <- fit.mult.impute(fml.st1, xtrans=mids.data, data = dt.ih,
+st1 <- fit.mult.impute(fml.st1, xtrans=mids.data, data = orig.data,
                        fitter = lrm, subset = subset.cer, pr = FALSE)
 
 print(paste("R2 stage 1 regression =", round(st1$stats["R2"],3)))
