@@ -8,4 +8,4 @@ Description: One of the more frequently used functions I use.
 License: GPL-2
 Encoding: UTF-8
 Depends: ordinal, lme4, ggplot2, data.table, ROCR 
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0

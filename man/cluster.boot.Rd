@@ -4,7 +4,8 @@
 \alias{cluster.boot}
 \title{Bootstrap with clustered data}
 \usage{
-cluster.boot(data = NULL, cluster.v = NULL, statistic = NULL, R = NULL)
+cluster.boot(data = NULL, cluster.v = NULL, statistic = NULL,
+  R = NULL)
 }
 \arguments{
 \item{data}{data.frame or data.table}
