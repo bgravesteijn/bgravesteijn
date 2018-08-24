@@ -9,11 +9,11 @@
 #' @return Returns a vector of the estimate with 95% CI of the treatment effect, including the R2 of the stage 1 regression.
 #' @description This function uses two-stage least squares regression to estimate a causal treatment effect with an instrumental variable. For info or explanation, please contact: b.gravesteijn@erasmusmc.nl
 calc.CER.lrm <- function(mids.data = NULL, orig.data=NULL,
-                         instrument = NULL, therapy= NULL, outcome=NULL, 
+                         instrument = NULL, therapy= NULL, outcome=NULL,
                          subset.cer=NULL){
-##stage 1## 
+##stage 1##
 fml.st1 <- as.formula(paste(therapy, "~", instrument))
-st1 <- fit.mult.impute(fml.st1, xtrans=dti.ih.mice, data = dt.ih, 
+st1 <- fit.mult.impute(fml.st1, xtrans=mids.data, data = dt.ih,
                        fitter = lrm, subset = subset.cer, pr = FALSE)
 
 print(paste("R2 stage 1 regression =", round(st1$stats["R2"],3)))
