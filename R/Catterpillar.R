@@ -159,10 +159,10 @@ catterpillar<-function (x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRU
   }
   plot.df$col.group<-col.group
   if(is.null(col.group)){
-    plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi))+
+    plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi))+coord_flip()+
       geom_pointrange() + geom_hline(yintercept = 0, scale_y_continuous(name = "Log odds"))
   }else{
-    plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi, col=col.group)) +
+    plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi, col=col.group)) +coord_flip()+
       geom_pointrange() + geom_hline(yintercept = 0, scale_y_continuous(name = "Log odds"))
   }
 
