@@ -159,21 +159,19 @@ catterpillar<-function (x = NULL, fitter = NULL, grp.var.t = NULL, plotMOR = TRU
   }
   plot.df$col.group<-col.group
   if(is.null(col.group)){
-    plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi))
-    + geom_pointrange() + geom_hline(yintercept = 0, scale_y_continuous(name = "Log odds"))
+    plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi))+
+      geom_pointrange() + geom_hline(yintercept = 0, scale_y_continuous(name = "Log odds"))
   }else{
-    plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi, col=col.group))
-    + geom_pointrange() + geom_hline(yintercept = 0, scale_y_continuous(name = "Log odds"))
+    plot <- ggplot(data = plot.df, aes(x = grp, y = condval, ymin = lo, ymax = hi, col=col.group)) +
+      geom_pointrange() + geom_hline(yintercept = 0, scale_y_continuous(name = "Log odds"))
   }
 
     if (plotMOR) {
     if (plotlabels) {
-      plot + annotate("text", x = yMOR, y = xMOR, label = paste("MOR =",
-                                                                MOR))
+      plot + annotate("text", x = yMOR, y = xMOR, label = paste("MOR =",MOR))
     }
     else {
-      plot + annotate("text", x = yMOR, y = xMOR, label = paste("MOR =",
-                                                                MOR)) + theme(axis.text.y = element_blank())
+      plot + annotate("text", x = yMOR, y = xMOR, label = paste("MOR =",MOR)) + theme(axis.text.y = element_blank())
     }
   }
   else {
