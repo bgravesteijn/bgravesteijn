@@ -22,7 +22,7 @@ print(paste("R2 stage 1 regression =", round(st1$stats["R2"],3)))
 out.2   <- vector(mode = "list", length = 5)
 
 for(i in 1:5){
-  fit  <- lrm(complete(mids.data,i)[subset.cer,][,outcome]~st1$linear.predictors)
+  fit  <- lrm(complete(mids.data,i)[subset.cer,outcome]~st1$linear.predictors)
   beta <- fit$coefficients["st1"]
   se   <- sqrt(diag(fit$var))["st1"]
   out.2[[i]] <- c(beta, se)
